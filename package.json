@@ -1,0 +1,41 @@
+{
+  "name": "armygrid",
+  "version": "0.0.1",
+  "description": "",
+  "main": "app.js",
+  "homepage": "https://armygrid.com",
+  "scripts": {
+    "start": "electron . --disable-gpu",
+    "build-installer": "electron-builder",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "",
+  "publish": {
+    "provider": "github",
+    "releaseType": "release"
+  },
+  "build": {
+    "appId": "armygrid.app",
+    "productName": "Armygrid",
+    "linux": {
+      "target": [
+        "snap",
+        "deb",
+        "rpm",
+        "tar.gz"
+      ],
+      "category": "Utility",
+      "icon": "assets/logo.icns"
+    }
+  },
+  "author": "Mantas <armygrid@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^22.0.0",
+    "electron-builder": "^21.0.0"
+  },
+  "dependencies": {
+    "axios": "^1.3.2",
+    "electron-updater": "^5.3.0"
+  }
+}
