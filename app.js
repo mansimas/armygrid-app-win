@@ -5,7 +5,20 @@ var { autoUpdater, AppUpdater } = require('electron-updater');
 var isMac = process.platform === 'darwin'
 var mainWindow, AdditionalWindow;
 
-autoUpdater.autoDownload = false;
+process.env.APPIMAGE = require('path').join(__dirname, 'dist', `Armygrid-${app.getVersion()}.AppImage`)
+Object.defineProperty(app, 'isPackaged', {
+  get() {
+    return true;
+  }
+});
+
+autoUpdater.setFeedURL({
+  provider: "github",
+  owner: "margoch24",
+  repo: "electron-app",
+});
+
+autoUpdater.autoDownload = true;
 autoUpdater.autoInstallOnAppQuit = true;
 
 function createMainWindow() {
@@ -21,14 +34,14 @@ function createMainWindow() {
   mainWindow.loadURL('http://localhost:1400');
   createMainMenu();
   // sendData();
-  showMessage('Checking for updates');
+  // showMessage('Checking for updates');
 }
 
 function showMessage(message) {
   console.log('showMessage trapped');
   console.log(message);
   mainWindow.webContents.executeJavaScript(`alert("${message}")`, true)
-  // mainWindow.webContents.send('updateMessage', message);
+  mainWindow.webContents.send('updateMessage', message);
 }
 
 // function sendData() {
@@ -57,15 +70,18 @@ function createAdditionalWindow() {
 
 app.whenReady().then(() => {
   createMainWindow();
+  autoUpdater.checkForUpdates();
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createMainWindow();
     }
   })
-
-  autoUpdater.checkForUpdates();
 });
+
+autoUpdater.on('checking-for-update', () => {
+  showMessage('Checking for update...')
+})
 
 autoUpdater.on("update-available", (info) => {
   showMessage(`Update available. Current version ${app.getVersion()}`);
