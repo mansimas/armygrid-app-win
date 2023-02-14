@@ -32,17 +32,7 @@ function createMainWindow() {
   });
   mainWindow.loadURL('https://armygrid.com');
   createMainMenu();
-}
-
-async function showMessage() {
-  var notification_upt = await mainWindow.webContents.executeJavaScript("localStorage.getItem('notif_for_update')");
-  var notification_down = await mainWindow.webContents.executeJavaScript("localStorage.getItem('notif_for_download')");
-  if (notification_upt && notification_down) {
-    console.log()
-    mainWindow.webContents.executeJavaScript(`alert("${notification_upt + '\\n' + notification_down}")`, true).then(function () {
-      return app.quit()
-    });
-  }
+  fromApp();
 }
 
 function createAdditionalWindow() {
@@ -57,6 +47,22 @@ function createAdditionalWindow() {
   });
   AdditionalWindow.loadURL('https://armygrid.com');
   createMainMenu();
+  fromApp();
+}
+
+function fromApp() {
+  mainWindow.webContents.executeJavaScript("localStorage.setItem('armygrid_from_app', true)", true);
+}
+
+async function showMessage() {
+  var notification_upt = await mainWindow.webContents.executeJavaScript("localStorage.getItem('notif_for_update')", true);
+  var notification_down = await mainWindow.webContents.executeJavaScript("localStorage.getItem('notif_for_download')", true);
+  if (notification_upt && notification_down) {
+    console.log()
+    mainWindow.webContents.executeJavaScript(`alert("${notification_upt + '\\n' + notification_down}")`, true).then(function () {
+      return app.quit()
+    });
+  }
 }
 
 app.whenReady().then(async () => {
