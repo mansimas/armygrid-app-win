@@ -1,24 +1,23 @@
 var { app, BrowserWindow, Menu } = require('electron');
-var axios = require('axios');
 var { autoUpdater, AppUpdater } = require('electron-updater');
 
 var isMac = process.platform === 'darwin'
 var mainWindow, AdditionalWindow;
 
-process.env.APPIMAGE = require('path').join(__dirname, 'dist', `Armygrid-${app.getVersion()}.AppImage`)
-Object.defineProperty(app, 'isPackaged', {
-  get() {
-    return true;
-  }
-});
+// process.env.APPIMAGE = require('path').join(__dirname, 'dist', `Armygrid-${app.getVersion()}.AppImage`)
+// Object.defineProperty(app, 'isPackaged', {
+//   get() {
+//     return true;
+//   }
+// });
 
 autoUpdater.setFeedURL({
   provider: "github",
-  owner: "margoch24",
-  repo: "electron-app",
+  owner: "mansimas",
+  repo: "armygrid-app-win",
 });
 
-autoUpdater.autoDownload = true;
+autoUpdater.autoDownload = false;
 autoUpdater.autoInstallOnAppQuit = true;
 
 function createMainWindow() {
@@ -31,28 +30,20 @@ function createMainWindow() {
     },
     icon: __dirname + '/assets/AG_logo.png', 
   });
-  mainWindow.loadURL('http://localhost:1400');
+  mainWindow.loadURL('https://armygrid.com');
   createMainMenu();
-  // sendData();
-  // showMessage('Checking for updates');
 }
 
-function showMessage(message) {
-  console.log('showMessage trapped');
-  console.log(message);
-  mainWindow.webContents.executeJavaScript(`alert("${message}")`, true)
-  mainWindow.webContents.send('updateMessage', message);
+async function showMessage() {
+  var notification_upt = await mainWindow.webContents.executeJavaScript("localStorage.getItem('notif_for_update')");
+  var notification_down = await mainWindow.webContents.executeJavaScript("localStorage.getItem('notif_for_download')");
+  if (notification_upt && notification_down) {
+    console.log()
+    mainWindow.webContents.executeJavaScript(`alert("${notification_upt + '\\n' + notification_down}")`, true).then(function () {
+      return app.quit()
+    });
+  }
 }
-
-// function sendData() {
-//   axios.post('http://localhost:1400/download', {
-//     platform: process.platform,
-//     version: app.getVersion()
-//   })
-//   .catch(function (error) {
-//     console.log(error);
-//   });
-// }
 
 function createAdditionalWindow() {
   AdditionalWindow = new BrowserWindow({
@@ -64,13 +55,14 @@ function createAdditionalWindow() {
     },
     icon: __dirname + '/assets/AG_logo.png',
   });
-  AdditionalWindow.loadURL('http://localhost:1400');
+  AdditionalWindow.loadURL('https://armygrid.com');
   createMainMenu();
 }
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
   createMainWindow();
-  autoUpdater.checkForUpdates();
+  var info_update = await autoUpdater.checkForUpdates();
+  if(info_update.cancellationToken) showMessage()
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
@@ -80,26 +72,28 @@ app.whenReady().then(() => {
 });
 
 autoUpdater.on('checking-for-update', () => {
-  showMessage('Checking for update...')
+  return;
 })
 
 autoUpdater.on("update-available", (info) => {
-  showMessage(`Update available. Current version ${app.getVersion()}`);
-  var pth = autoUpdater.downloadUpdate();
-  showMessage(pth);
+  var notification = `Update available. Current version ${app.getVersion()}`
+  mainWindow.webContents.executeJavaScript(`localStorage.setItem("notif_for_update", "${notification}")`, true)
+  autoUpdater.downloadUpdate();
 });
 
 autoUpdater.on("update-not-available", (info) => {
-  showMessage(`No update available. Current version ${app.getVersion()}`);
+  return;
 });
 
-/*Download Completion Message*/
 autoUpdater.on("update-downloaded", (info) => {
-  showMessage(`Update downloaded. Current version ${app.getVersion()}`);
+  var notification =`Update downloaded. Current version ${app.getVersion()}`;
+  mainWindow.webContents.executeJavaScript(`localStorage.setItem("notif_for_download", "${notification}")`, true)
 });
 
 autoUpdater.on("error", (info) => {
-  showMessage(info);
+  mainWindow.webContents.executeJavaScript(`alert("${info}")`, true).then(function () {
+    return app.quit()
+  });
 });
 
 app.on('window-all-closed', () => {

@@ -14,25 +14,31 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/margoch24/electron-app.git"
+    "url": "https://github.com/mansimas/armygrid-app-win.git"
   },
   "publish": {
     "provider": "github",
     "releaseType": "release"
   },
-  "build": {
-    "appId": "armygrid.app",
+  "build": {		
+    "appId": "armygrid.app",		
     "productName": "Armygrid",
-    "nsis": {},
-    "linux": {
-      "target": [
-        "AppImage",
-        "deb"
-      ],
-      "category": "Utility",
-      "icon": "assets/logo.icns"
-    }
-  },
+    "artifactName": "Armygrid-Setup-${version}.${ext}",	
+    "win": {		
+      "target": [		
+        "nsis"		
+      ],		
+      "icon": "assets/AG.ico"		
+    },		
+    "nsis": {		
+      "installerIcon": "assets/AG.ico",		
+      "uninstallerIcon": "assets/AG.ico",		
+      "uninstallDisplayName": "CPU Monitor",		
+      "license": "license.txt",		
+      "oneClick": false,		
+      "allowToChangeInstallationDirectory": true		
+    }		
+  },		
   "author": "Mantas <armygrid@gmail.com>",
   "license": "ISC",
   "devDependencies": {
