@@ -4,12 +4,12 @@ var { autoUpdater, AppUpdater } = require('electron-updater');
 var isMac = process.platform === 'darwin'
 var mainWindow, AdditionalWindow;
 
-// process.env.APPIMAGE = require('path').join(__dirname, 'dist', `Armygrid-${app.getVersion()}.AppImage`)
-// Object.defineProperty(app, 'isPackaged', {
-//   get() {
-//     return true;
-//   }
-// });
+process.env.APPIMAGE = require('path').join(__dirname, 'dist', `Armygrid-${app.getVersion()}.AppImage`)
+Object.defineProperty(app, 'isPackaged', {
+  get() {
+    return true;
+  }
+});
 
 autoUpdater.setFeedURL({
   provider: "github",

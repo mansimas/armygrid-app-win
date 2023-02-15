@@ -1,0 +1,19 @@
+directories:
+  output: dist
+  buildResources: build
+appId: armygrid.app
+productName: Armygrid
+artifactName: Armygrid-Setup-${version}.${ext}
+win:
+  target:
+    - nsis
+  icon: assets/AG.ico
+nsis:
+  installerIcon: assets/AG.ico
+  uninstallerIcon: assets/AG.ico
+  uninstallDisplayName: CPU Monitor
+  license: license.txt
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+files: []
+electronVersion: 19.1.9

@@ -1,12 +1,13 @@
 {
   "name": "armygrid",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "",
   "main": "app.js",
   "homepage": "https://armygrid.com",
   "scripts": {
     "start": "electron . --disable-gpu",
     "build-installer": "electron-builder",
+    "release": "standart-version",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "target": [
@@ -20,28 +21,29 @@
     "provider": "github",
     "releaseType": "release"
   },
-  "build": {		
-    "appId": "armygrid.app",		
+  "build": {
+    "appId": "armygrid.app",
     "productName": "Armygrid",
-    "artifactName": "Armygrid-Setup-${version}.${ext}",	
-    "win": {		
-      "target": [		
-        "nsis"		
-      ],		
-      "icon": "assets/AG.ico"		
-    },		
-    "nsis": {		
-      "installerIcon": "assets/AG.ico",		
-      "uninstallerIcon": "assets/AG.ico",		
-      "uninstallDisplayName": "CPU Monitor",		
-      "license": "license.txt",		
-      "oneClick": false,		
-      "allowToChangeInstallationDirectory": true		
-    }		
-  },		
+    "artifactName": "Armygrid-Setup-${version}.${ext}",
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "assets/AG.ico"
+    },
+    "nsis": {
+      "installerIcon": "assets/AG.ico",
+      "uninstallerIcon": "assets/AG.ico",
+      "uninstallDisplayName": "CPU Monitor",
+      "license": "license.txt",
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  },
   "author": "Mantas <armygrid@gmail.com>",
   "license": "ISC",
   "devDependencies": {
+    "@alcalzone/release-script": "^3.5.9",
     "electron": "^19.0.9",
     "electron-builder": "^23.6.0"
   },
