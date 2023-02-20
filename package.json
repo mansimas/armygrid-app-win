@@ -6,9 +6,8 @@
   "homepage": "https://armygrid.com",
   "scripts": {
     "start": "electron . --disable-gpu",
-    "build-installer": "node pre-build.js && electron-builder build --publish always && node pre-build.js",
+    "release": "node pre-build.js && electron-builder build --publish always && node pre-build.js",
     "build-dev": "electron-builder",
-    "release": "build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "target": [

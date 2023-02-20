@@ -1,4 +1,4 @@
-var { app, BrowserWindow, Menu } = require('electron');
+var { app, BrowserWindow, Menu, dialog } = require('electron');
 var { autoUpdater, AppUpdater } = require('electron-updater');
 
 var isMac = process.platform === 'darwin'
@@ -59,8 +59,18 @@ async function showMessage() {
   var notification_upt = await mainWindow.webContents.executeJavaScript("localStorage.getItem('notif_for_update')", true);
   var notification_down = await mainWindow.webContents.executeJavaScript("localStorage.getItem('notif_for_download')", true);
   if (notification_upt && notification_down) {
-    mainWindow.webContents.executeJavaScript(`alert("${notification_upt + '\\n' + notification_down}")`, true).then(function () {
-      return app.quit()
+    mainWindow.webContents.executeJavaScript("var div = document.createElement('div'); div.style.cssText += 'background: rgba(0, 0, 0, 0.6); z-index: 1001; height: 100%; width: 100%; position: fixed'; document.body.insertBefore(div, document.body.firstChild);", true);
+    dialog.showMessageBox( mainWindow,
+     {
+        type: 'info',
+        buttons:['OK'],
+        title: 'Update Available',
+        message: `${notification_upt} \n${notification_down}`,
+      })
+    .then(function(result) {
+      if (result.response === 0) {
+        return app.quit()
+      }
     });
   }
 }
@@ -92,7 +102,8 @@ autoUpdater.on("update-not-available", (info) => {
 });
 
 autoUpdater.on("update-downloaded", (info) => {
-  var notification =`Update downloaded. Current version ${app.getVersion()}`;
+  console.log(info)
+  var notification =`Update downloaded. New version ${info.version}`;
   mainWindow.webContents.executeJavaScript(`localStorage.setItem("notif_for_download", "${notification}")`, true)
 });
 
