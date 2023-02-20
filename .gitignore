@@ -1,3 +1,5 @@
 Readme.md
 node_modules
-dist/win-unpacked
+dist/*
+.env
+Certificate.pfx

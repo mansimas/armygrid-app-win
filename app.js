@@ -4,12 +4,12 @@ var { autoUpdater, AppUpdater } = require('electron-updater');
 var isMac = process.platform === 'darwin'
 var mainWindow, AdditionalWindow;
 
-process.env.APPIMAGE = require('path').join(__dirname, 'dist', `Armygrid-${app.getVersion()}.AppImage`)
-Object.defineProperty(app, 'isPackaged', {
-  get() {
-    return true;
-  }
-});
+// process.env.APPIMAGE = require('path').join(__dirname, 'dist', `Armygrid-${app.getVersion()}.AppImage`)
+// Object.defineProperty(app, 'isPackaged', {
+//   get() {
+//     return true;
+//   }
+// });
 
 autoUpdater.setFeedURL({
   provider: "github",
@@ -26,7 +26,8 @@ function createMainWindow() {
     width: 1200,
     height: 700,
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: false,
+      contextIsolation: true
     },
     icon: __dirname + '/assets/AG_logo.png', 
   });
@@ -58,7 +59,6 @@ async function showMessage() {
   var notification_upt = await mainWindow.webContents.executeJavaScript("localStorage.getItem('notif_for_update')", true);
   var notification_down = await mainWindow.webContents.executeJavaScript("localStorage.getItem('notif_for_download')", true);
   if (notification_upt && notification_down) {
-    console.log()
     mainWindow.webContents.executeJavaScript(`alert("${notification_upt + '\\n' + notification_down}")`, true).then(function () {
       return app.quit()
     });
