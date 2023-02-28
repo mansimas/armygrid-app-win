@@ -1,6 +1,6 @@
 Readme.md
 node_modules
-dist/*
+dist
 .env
-Certificate.pfx
+Armygrid.pfx
 license.txt

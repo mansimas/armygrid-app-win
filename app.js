@@ -10,7 +10,6 @@ var mainWindow, AdditionalWindow;
 //     return true;
 //   }
 // });
-
 autoUpdater.setFeedURL({
   provider: "github",
   owner: "mansimas",
